@@ -99,7 +99,7 @@ export default function Signup() {
             { label: "Date of Birth", type: "date", name: "dob" },
           ].map(({ label, type, name }) => (
             <div key={name}>
-              <label className="block text-sm font-medium text-blue-900">
+              <label className="block text-sm font-medium text-blue-900 ">
                 {label}
               </label>
               <input
