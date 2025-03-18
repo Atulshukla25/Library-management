@@ -35,10 +35,6 @@ export async function POST(req) {
     );
     db.end();
 
-
-
-    
-
     return Response.json({ message: "User registered successfully", id: result.insertId });
   } catch (error) {
     console.error("Error:", error);
