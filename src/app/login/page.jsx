@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Cookies from "js-cookie";
 
 const loginSchema = z.object({
   email: z.string().email("Email field is required"),
@@ -32,8 +33,8 @@ export default function LoginPage() {
 
       const result = await res.json();
       if (res.ok) {
-        localStorage.setItem("token", result.token);
-        localStorage.setItem("userId", result.userId);
+        Cookies.set("token", result.token);
+        Cookies.set("userId", result.userId);
         router.push("/dashboard");
       } else {
         setServerError(result.error || "Login failed. Try again.");
@@ -46,7 +47,7 @@ export default function LoginPage() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white">
       <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-2xl border border-gray-200">
-        <h2 className="text-3xl font-bold text-center text-blue-800">Login</h2>
+        <h2 className="text-3xl font-bold text-center text-black">Login</h2>
 
         {serverError && (
           <p className="text-red-600 text-center font-medium">{serverError}</p>
@@ -57,7 +58,7 @@ export default function LoginPage() {
           className="space-y-6 text-gray-600"
         >
           <div>
-            <label className="block text-sm font-medium text-blue-900">
+            <label className="block text-sm font-medium text-black">
               Email
             </label>
             <input
@@ -74,7 +75,7 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-blue-900">
+            <label className="block text-sm font-medium text-black">
               Password
             </label>
             <input
@@ -92,17 +93,17 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+            className="w-full py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 focus:ring focus:ring-blue-400 transition duration-300"
           >
             Login
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-blue-700">
+        <p className="mt-4 text-center text-sm text-black">
           Don't have an account?{" "}
           <Link
             href="/signup"
-            className="text-blue-800 font-medium hover:underline"
+            className="text-black font-medium hover:underline"
           >
             Sign up
           </Link>

@@ -2,18 +2,19 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function Navbar({ user }) {
   const router = useRouter();
-  const [isPopupOpen, setIsPopupOpen]= useState(false)
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
+    Cookies.remove("token");
+    Cookies.remove("userId");
     router.push("/login");
   };
 
@@ -38,34 +39,34 @@ export default function Navbar({ user }) {
               onClick={togglePopup}
             />
             {isPopupOpen && (
-            <div className="absolute top-18 right-0 bg-white text-black p-4 shadow-lg rounded-md w-64 z-10">
-              <h3 className="text-lg font-semibold">User Profile</h3>
-              <p className="mt-2">
-                <strong>Name:</strong> {user.full_name}
-              </p>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p>
-                <strong>Department:</strong> {user.department}
-              </p>
-              <p>
-                <strong>Gender:</strong> {user.gender}
-              </p>
-              <button
-                onClick={handleLogout}
-                className="mt-4 w-full bg-red-500 text-white px-3 py-1 rounded"
-              >
-                Logout
-              </button>
-              <button
-                onClick={togglePopup}
-                className="mt-4 w-full bg-green-600 text-white px-3 py-1 rounded"
-              >
-                Close
-              </button>
-            </div>
-          )}
+              <div className="absolute top-18 right-0 bg-white text-black p-4 shadow-lg rounded-md w-64 z-10">
+                <h3 className="text-lg font-semibold">User Profile</h3>
+                <p className="mt-2">
+                  <strong>Name:</strong> {user.full_name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+                <p>
+                  <strong>Department:</strong> {user.department}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {user.gender}
+                </p>
+                <button
+                  onClick={handleLogout}
+                  className="mt-4 w-full bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Logout
+                </button>
+                <button
+                  onClick={togglePopup}
+                  className="mt-4 w-full bg-green-600 text-white px-3 py-1 rounded"
+                >
+                  Close
+                </button>
+              </div>
+            )}
             {/* <button
               onClick={handleLogout}
               className="bg-red-500 px-3 py-1 rounded"

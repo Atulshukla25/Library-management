@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ProtectedRoute from "@/components/ProtectedRoute.js";
 import Navbar from "@/components/Navbar";
+import Cookies from "js-cookie";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -10,13 +10,7 @@ export default function Dashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-
-    if (!userId || !token) {
-      router.push("/login");
-      return;
-    }
+    const userId = Cookies.get("userId");
 
     fetch(`/api/students/${userId}`)
       .then((res) => res.json())
@@ -30,7 +24,7 @@ export default function Dashboard() {
   }, [router]);
 
   return (
-    <ProtectedRoute>
+    <div>
       <Navbar user={user} />
       <div className="container mx-auto mt-8 px-6">
         <section className="bg-gradient-to-r from-purple-500 to-indigo-500 shadow-xl rounded-lg p-8 text-white">
@@ -65,6 +59,6 @@ export default function Dashboard() {
           </div>
         </section>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

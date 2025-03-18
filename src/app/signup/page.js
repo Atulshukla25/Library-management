@@ -22,11 +22,11 @@ const signupSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
   dob: z.string().refine((val) => new Date(val) < new Date(), {
-    message: "Date of birth must be in the past",
+    message: "Date of birth is required",
   }),
   department: z.enum(
     ["Computer Science", "Electronics", "Mechanical", "Civil", "Mathematics"],
-    { message: "Please select a valid department" }
+    { message: "Please select a department" }
   ),
   gender: z.enum(["Male", "Female", "Other"], {
     message: "Please select a gender",
@@ -44,6 +44,12 @@ const signupSchema = z.object({
     ),
 });
 
+function handleGoogle() {
+  alert("Sign up with google");
+}
+function handleGithub() {
+  alert("Sign up with github");
+}
 export default function Signup() {
   const router = useRouter();
   const {
@@ -77,8 +83,8 @@ export default function Signup() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white">
-      <div className="w-full mt-12 mb-12 max-w-md p-8 space-y-6 bg-white shadow-lg rounded-2xl border border-gray-200">
-        <h2 className="text-3xl font-bold text-center text-blue-800 mb-4">
+      <div className="w-full mt-12 mb-12 max-w-2xl p-8 space-y-6 bg-white shadow-lg rounded-2xl border border-gray-200">
+        <h2 className="text-3xl font-bold text-center text-black mb-4">
           Sign Up
         </h2>
 
@@ -90,94 +96,98 @@ export default function Signup() {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6 text-gray-600"
+          className="space-y-6 text-gray-800"
         >
-          {[
-            { label: "Full Name", type: "text", name: "full_name" },
-            { label: "Email", type: "email", name: "email" },
-            { label: "Password", type: "password", name: "password" },
-            { label: "Date of Birth", type: "date", name: "dob" },
-          ].map(({ label, type, name }) => (
-            <div key={name}>
-              <label className="block text-sm font-medium text-blue-900 ">
-                {label}
+          <div className="grid grid-cols-2 gap-6">
+            {[
+              { label: "Full Name", type: "text", name: "full_name" },
+              { label: "Email", type: "email", name: "email" },
+              { label: "Password", type: "password", name: "password" },
+              { label: "Date of Birth", type: "date", name: "dob" },
+            ].map(({ label, type, name }) => (
+              <div key={name}>
+                <label className="block text-sm font-medium text-black ">
+                  {label}
+                </label>
+                <input
+                  type={type}
+                  {...register(name)}
+                  className="w-full mt-1 p-1 px-4 py-2 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
+                />
+                {errors[name] && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors[name]?.message}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-black">
+                Department
               </label>
-              <input
-                type={type}
-                {...register(name)}
-                className="w-full mt-1 p-1 border border-blue-300 rounded-lg focus:ring focus:ring-blue-400 focus:outline-none bg-white"
-              />
-              {errors[name] && (
+              <select
+                {...register("department")}
+                className="w-full mt-1 px-4 py-2 p-1 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
+              >
+                <option value="">Select Department</option>
+                {[
+                  "Computer Science",
+                  "Electronics",
+                  "Mechanical",
+                  "Civil",
+                  "Mathematics",
+                ].map((dept) => (
+                  <option key={dept} value={dept}>
+                    {dept}
+                  </option>
+                ))}
+              </select>
+              {errors.department && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors[name]?.message}
+                  {errors.department.message}
                 </p>
               )}
             </div>
-          ))}
 
-          <div>
-            <label className="block text-sm font-medium text-blue-900">
-              Department
-            </label>
-            <select
-              {...register("department")}
-              className="w-full mt-1 p-1 border border-blue-300 rounded-lg focus:ring focus:ring-blue-400 focus:outline-none bg-white"
-            >
-              <option value="">Select Department</option>
-              {[
-                "Computer Science",
-                "Electronics",
-                "Mechanical",
-                "Civil",
-                "Mathematics",
-              ].map((dept) => (
-                <option key={dept} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
-            {errors.department && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.department.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-900">
-              Gender
-            </label>
-            <div className="flex space-x-4 mt-1">
-              {["Male", "Female", "Other"].map((value) => (
-                <label
-                  key={value}
-                  className="flex items-center space-x-2 text-blue-700"
-                >
-                  <input
-                    type="radio"
-                    value={value}
-                    {...register("gender")}
-                    className="w-4 h-4 text-blue-500 focus:ring focus:ring-blue-400"
-                  />
-                  <span>{value}</span>
-                </label>
-              ))}
+            <div>
+              <label className="block text-sm font-medium text-black">
+                Gender
+              </label>
+              <div className="flex space-x-4 mt-3">
+                {["Male", "Female", "Other"].map((value) => (
+                  <label
+                    key={value}
+                    className="flex items-center space-x-2 text-gray-800"
+                  >
+                    <input
+                      type="radio"
+                      value={value}
+                      {...register("gender")}
+                      className="w-4 h-4 text-black focus:ring focus:ring-red-400"
+                    />
+                    <span>{value}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.gender && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.gender.message}
+                </p>
+              )}
             </div>
-            {errors.gender && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.gender.message}
-              </p>
-            )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-blue-900">
+            <label className="block text-sm font-medium text-black">
               Profile Picture
             </label>
             <input
               type="file"
               {...register("profile_picture")}
-              className="w-full mt-1 p-1 border border-blue-300 rounded-lg focus:ring focus:ring-blue-400 focus:outline-none bg-white"
+              className="w-full mt-1 p-1 border px-4 py-2 border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
             />
             {errors.profile_picture && (
               <p className="text-red-500 text-sm mt-1">
@@ -188,17 +198,29 @@ export default function Signup() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+            className="w-full py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 transition duration-300"
           >
             Sign Up
           </button>
         </form>
+        <button
+          className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          onClick={handleGoogle}
+        >
+          Sign Up with Google
+        </button>
+        <button
+          className="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
+          onClick={handleGithub}
+        >
+          Sign Up with GitHub
+        </button>
 
-        <p className="mt-4 text-center text-sm text-blue-700">
+        <p className="mt-4 text-center text-sm text-black">
           Already have an account?{" "}
           <Link
             href="/login"
-            className="text-blue-800 font-medium hover:underline"
+            className="text-black font-medium hover:underline"
           >
             Login
           </Link>
