@@ -1,0 +1,209 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useState } from "react";
+import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
+
+const signupSchema = z.object({
+  full_name: z.string().min(3, "Full name must be at least 3 characters"),
+  email: z.string().email("Email address is required"),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
+  dob: z.string().refine((val) => new Date(val) < new Date(), {
+    message: "Date of birth must be in the past",
+  }),
+  department: z.enum(
+    ["Computer Science", "Electronics", "Mechanical", "Civil", "Mathematics"],
+    { message: "Please select a valid department" }
+  ),
+  gender: z.enum(["Male", "Female", "Other"], {
+    message: "Please select a gender",
+  }),
+  profile_picture: z
+    .any()
+    .refine((files) => files.length > 0, "Profile picture is required")
+    .refine(
+      (files) => ALLOWED_FILE_TYPES.includes(files[0]?.type),
+      "Only JPG, JPEG, and PNG files are allowed"
+    )
+    .refine(
+      (files) => files[0]?.size <= MAX_FILE_SIZE,
+      "File must be under 2MB"
+    ),
+});
+
+export default function Signup() {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: zodResolver(signupSchema) });
+
+  const [serverError, setServerError] = useState("");
+
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("full_name", data.full_name);
+    formData.append("email", data.email);
+    formData.append("password", data.password);
+    formData.append("dob", data.dob);
+    formData.append("department", data.department);
+    formData.append("gender", data.gender);
+    formData.append("profile_picture", data.profile_picture[0]);
+
+    try {
+      await axios.post("/api/auth/signup", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      router.push("/dashboard");
+      alert("Signup successful! Redirecting...");
+    } catch (error) {
+      setServerError("Failed to sign up. Please try again.");
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white">
+      <div className="w-full mt-12 mb-12 max-w-md p-8 space-y-6 bg-white shadow-lg rounded-2xl border border-gray-200">
+        <h2 className="text-3xl font-bold text-center text-blue-800 mb-4">
+          Sign Up
+        </h2>
+
+        {serverError && (
+          <p className="text-red-600 text-center font-medium mb-4">
+            {serverError}
+          </p>
+        )}
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6 text-gray-600"
+        >
+          {[
+            { label: "Full Name", type: "text", name: "full_name" },
+            { label: "Email", type: "email", name: "email" },
+            { label: "Password", type: "password", name: "password" },
+            { label: "Date of Birth", type: "date", name: "dob" },
+          ].map(({ label, type, name }) => (
+            <div key={name}>
+              <label className="block text-sm font-medium text-blue-900">
+                {label}
+              </label>
+              <input
+                type={type}
+                {...register(name)}
+                className="w-full mt-1 p-1 border border-blue-300 rounded-lg focus:ring focus:ring-blue-400 focus:outline-none bg-white"
+              />
+              {errors[name] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors[name]?.message}
+                </p>
+              )}
+            </div>
+          ))}
+
+          <div>
+            <label className="block text-sm font-medium text-blue-900">
+              Department
+            </label>
+            <select
+              {...register("department")}
+              className="w-full mt-1 p-1 border border-blue-300 rounded-lg focus:ring focus:ring-blue-400 focus:outline-none bg-white"
+            >
+              <option value="">Select Department</option>
+              {[
+                "Computer Science",
+                "Electronics",
+                "Mechanical",
+                "Civil",
+                "Mathematics",
+              ].map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
+                </option>
+              ))}
+            </select>
+            {errors.department && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.department.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-900">
+              Gender
+            </label>
+            <div className="flex space-x-4 mt-1">
+              {["Male", "Female", "Other"].map((value) => (
+                <label
+                  key={value}
+                  className="flex items-center space-x-2 text-blue-700"
+                >
+                  <input
+                    type="radio"
+                    value={value}
+                    {...register("gender")}
+                    className="w-4 h-4 text-blue-500 focus:ring focus:ring-blue-400"
+                  />
+                  <span>{value}</span>
+                </label>
+              ))}
+            </div>
+            {errors.gender && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.gender.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-900">
+              Profile Picture
+            </label>
+            <input
+              type="file"
+              {...register("profile_picture")}
+              className="w-full mt-1 p-1 border border-blue-300 rounded-lg focus:ring focus:ring-blue-400 focus:outline-none bg-white"
+            />
+            {errors.profile_picture && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.profile_picture.message}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          >
+            Sign Up
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-sm text-blue-700">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-blue-800 font-medium hover:underline"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
