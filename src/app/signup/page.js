@@ -100,18 +100,34 @@ export default function Signup() {
         >
           <div className="grid grid-cols-2 gap-6">
             {[
-              { label: "Full Name", type: "text", name: "full_name" },
-              { label: "Email", type: "email", name: "email" },
-              { label: "Password", type: "password", name: "password" },
+              {
+                label: "Full Name",
+                type: "text",
+                name: "full_name",
+                placeholder: "Enter your name",
+              },
+              {
+                label: "Email",
+                type: "email",
+                name: "email",
+                placeholder: "Enter your email",
+              },
+              {
+                label: "Password",
+                type: "password",
+                name: "password",
+                placeholder: "Create your password",
+              },
               { label: "Date of Birth", type: "date", name: "dob" },
-            ].map(({ label, type, name }) => (
+            ].map(({ label, type, name, placeholder }) => (
               <div key={name}>
-                <label className="block text-sm font-medium text-black ">
+                <label className="block text-sm font-medium text-black">
                   {label}
                 </label>
                 <input
                   type={type}
                   {...register(name)}
+                  placeholder={placeholder}
                   className="w-full mt-1 p-1 px-4 py-2 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
                 />
                 {errors[name] && (
@@ -166,7 +182,7 @@ export default function Signup() {
                       type="radio"
                       value={value}
                       {...register("gender")}
-                      className="w-4 h-4 text-black focus:ring focus:ring-red-400"
+                      className="w-4 h-4 text-black focus:ring focus:ring-blue-900"
                     />
                     <span>{value}</span>
                   </label>
