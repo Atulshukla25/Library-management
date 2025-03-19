@@ -67,12 +67,6 @@ export default function Navbar({ user }) {
                 </button>
               </div>
             )}
-            {/* <button
-              onClick={handleLogout}
-              className="bg-red-500 px-3 py-1 rounded"
-            >
-              Logout
-            </button> */}
           </div>
         ) : (
           <>
