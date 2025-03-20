@@ -47,6 +47,13 @@ const signupSchema = z.object({
     ),
 });
 
+function handleGoogle() {
+  alert("You clicked continue with google");
+}
+function handleGithub() {
+  alert("You clicked continue with github");
+}
+
 export default function Signup() {
   const router = useRouter();
   const {
@@ -216,6 +223,20 @@ export default function Signup() {
             Sign Up
           </button>
         </form>
+
+        <p className="flex justify-center text-black text-mg font-bold">Or</p>
+        <button
+          className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          onClick={handleGoogle}
+        >
+          Signup with Google
+        </button>
+        <button
+          className="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
+          onClick={handleGithub}
+        >
+          Signup with GitHub
+        </button>
 
         <p className="mt-4 text-center text-sm text-black">
           Already have an account?{" "}
