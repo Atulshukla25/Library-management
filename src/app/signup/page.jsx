@@ -3,11 +3,12 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-
+import flatpickr from "flatpickr";
+import "flatpickr/dist/themes/light.css";
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
@@ -51,7 +52,7 @@ function handleGoogle() {
   alert("You clicked Signup with google");
 }
 function handleGithub() {
-  alert("You clicked continue with github");
+  alert("You clicked Signup with github");
 }
 
 export default function Signup() {
@@ -60,9 +61,20 @@ export default function Signup() {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm({ resolver: zodResolver(signupSchema) });
 
   const [serverError, setServerError] = useState("");
+
+  useEffect(() => {
+    flatpickr("#dob", {
+      dateFormat: "Y-m-d",
+      maxDate: "today",
+      onChange: function (selectedDates, dateStr, instance) {
+        setValue("dob", dateStr);
+      },
+    });
+  }, [setValue]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -130,6 +142,7 @@ export default function Signup() {
                 </label>
                 <input
                   type={type}
+                  id={name === "dob" ? "dob" : undefined}
                   {...register(name)}
                   placeholder={placeholder}
                   className="w-full mt-1 p-1 px-4 py-2 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
