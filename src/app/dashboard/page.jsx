@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
-  const [books, setBooks] = useState([]);
   const router = useRouter();
 
   useEffect(() => {

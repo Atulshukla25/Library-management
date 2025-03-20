@@ -71,6 +71,8 @@ export default function Signup() {
     });
   }, [setValue]);
 
+  const [departments, setDepartments] = useState([]);
+
   const onSubmit = async (data) => {
     const formData = new FormData();
     formData.append("full_name", data.full_name);
@@ -91,6 +93,16 @@ export default function Signup() {
       setServerError("Failed to sign up. Please try again.");
     }
   };
+
+  const fetchDepartment = async () => {
+    const fetchData = await axios.get("/api/departments");
+    setDepartments(fetchData.data);
+    console.log(fetchData.data);
+  };
+
+  useEffect(() => {
+    fetchDepartment();
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white">
@@ -166,16 +178,8 @@ export default function Signup() {
                 className="w-full mt-1 px-4 py-2 p-1 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
               >
                 <option value="">Select Department</option>
-                {[
-                  "Computer Science",
-                  "Electronics",
-                  "Mechanical",
-                  "Civil",
-                  "Mathematics",
-                ].map((dept) => (
-                  <option key={dept} value={dept}>
-                    {dept}
-                  </option>
+                {departments.map((dept) => (
+                  <option key={dept.id}>{dept.department}</option>
                 ))}
               </select>
               {errors.department && (
