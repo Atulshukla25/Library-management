@@ -22,12 +22,7 @@ const signupSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
-  dob: z
-    .string()
-    .min(8, "Date of birth is required")
-    .refine((val) => new Date(val) < new Date(), {
-      message: "Date of birth must be past",
-    }),
+  dob: z.string().min(8, "Date of birth is required"),
   department: z.enum(
     ["Computer Science", "Electronics", "Mechanical", "Civil", "Mathematics"],
     { message: "Please select a department" }
