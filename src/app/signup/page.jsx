@@ -14,7 +14,7 @@ const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/jpg"];
 
 const signupSchema = z.object({
   full_name: z.string().min(3, "Full name must be at least 3 characters"),
-  email: z.string().email("Email address is required"),
+  email: z.string().email("Please enter your email"),
   password: z
     .string()
     .min(6, "Password must be at least 6 characters")
@@ -22,7 +22,7 @@ const signupSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
-  dob: z.string().min(8, "Date of birth is required"),
+  dob: z.string().min(8, "Please select your date of birth"),
   department: z.enum(
     ["Computer Science", "Electronics", "Mechanical", "Civil", "Mathematics"],
     { message: "Please select a department" }
@@ -32,7 +32,7 @@ const signupSchema = z.object({
   }),
   profile_picture: z
     .any()
-    .refine((files) => files.length > 0, "Profile picture is required")
+    .refine((files) => files.length > 0, "Please upload your profile picture")
     .refine(
       (files) => ALLOWED_FILE_TYPES.includes(files[0]?.type),
       "Only JPG, JPEG, and PNG files are allowed"
@@ -129,7 +129,12 @@ export default function Signup() {
                 name: "password",
                 placeholder: "Create your password",
               },
-              { label: "Date of Birth", type: "date", name: "dob" },
+              {
+                label: "Date of Birth",
+                type: "date",
+                name: "dob",
+                placeholder: "Select your date of birth",
+              },
             ].map(({ label, type, name, placeholder }) => (
               <div key={name}>
                 <label className="block text-sm font-medium text-black">
