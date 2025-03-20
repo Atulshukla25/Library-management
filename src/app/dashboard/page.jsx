@@ -16,11 +16,6 @@ export default function Dashboard() {
       .then((res) => res.json())
       .then((data) => setUser(data))
       .catch((err) => console.error("Error fetching user:", err));
-
-    fetch("/api/books")
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-      .catch((err) => console.error("Error fetching books:", err));
   }, [router]);
 
   return (
