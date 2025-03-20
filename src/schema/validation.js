@@ -13,9 +13,9 @@ export const signupSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number")
     .regex(/[@$!%*?&]/, "Password must contain at least one special character"),
-  dob: z.string().min(8, "Please select your date of birth"),
+  dob: z.string().min(1, "Please select your date of birth"),
   department: z.enum(
-    ["Computer Science", "Electronics", "Mechanical", "Civil", "Mathematics"],
+    ["Computer Science", "Civil", "Mechanical", "Commerce", "Pharmacy"],
     { message: "Please select a department" }
   ),
   gender: z.enum(["Male", "Female", "Other"], {

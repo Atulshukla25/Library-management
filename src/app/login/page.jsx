@@ -125,7 +125,7 @@ export default function LoginPage() {
             href="/signup"
             className="text-black font-medium hover:underline"
           >
-            Sign up
+            Create now
           </Link>
         </p>
       </div>

@@ -13,6 +13,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@auth/core": "^0.34.2",
     "@hookform/resolvers": "^4.1.3",
     "axios": "^1.8.3",
     "bcrypt": "^5.1.1",

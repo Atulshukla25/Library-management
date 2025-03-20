@@ -32,7 +32,7 @@ export default function Signup() {
       dateFormat: "Y-m-d",
       maxDate: "today",
       onChange: function (selectedDates, dateStr, instance) {
-        setValue("dob", dateStr);
+        setValue("dob", dateStr, { shouldValidate: true });
       },
     });
   }, [setValue]);
@@ -74,7 +74,7 @@ export default function Signup() {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white">
       <div className="w-full mt-12 mb-12 max-w-2xl p-8 space-y-6 bg-white shadow-lg rounded-2xl border border-gray-200">
         <h2 className="text-3xl font-bold text-center text-black mb-4">
-          Sign Up
+          Create an account
         </h2>
 
         {serverError && (
@@ -145,7 +145,9 @@ export default function Signup() {
               >
                 <option value="">Select Department</option>
                 {departments.map((dept) => (
-                  <option key={dept.id}>{dept.department}</option>
+                  <option key={dept.id} value={dept.department}>
+                    {dept.department}
+                  </option>
                 ))}
               </select>
               {errors.department && (
