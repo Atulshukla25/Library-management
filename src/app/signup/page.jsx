@@ -48,7 +48,7 @@ const signupSchema = z.object({
 });
 
 function handleGoogle() {
-  alert("You clicked continue with google");
+  alert("You clicked Signup with google");
 }
 function handleGithub() {
   alert("You clicked continue with github");
