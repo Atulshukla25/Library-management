@@ -129,22 +129,22 @@ export default function LoginPage() {
           <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
         </div>
         <button
-          className="w-full py-3 flex justify-center items-center gap-x-2 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-800 focus:ring focus:ring-yellow-600 transition duration-300"
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 focus:ring focus:ring-yellow-600 transition duration-300"
           onClick={handleGoogle}
         >
-          <FaGoogle /> CONTINUE WITH GOOGLE
+          <FaGoogle className="text-xl"/> CONTINUE WITH GOOGLE
         </button>
         <button
           className="w-full py-3 flex justify-center items-center gap-x-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
           onClick={handleGithub}
         >
-          <FaGithub /> CONTINUE WITH GITHUB
+          <FaGithub className="text-xl" /> CONTINUE WITH GITHUB
         </button>
         <button
           className="w-full py-3 flex justify-center items-center gap-x-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
           onClick={handleFacebook}
         >
-          <FaFacebook /> CONTINUE WITH FACEBOOK
+          <FaFacebook className="text-xl"/> CONTINUE WITH FACEBOOK
         </button>
 
         <p className="mt-4 text-center text-sm text-black">
@@ -153,7 +153,7 @@ export default function LoginPage() {
             href="/signup"
             className="text-black font-medium hover:underline"
           >
-            CREATE NOW
+            Create now
           </Link>
         </p>
       </div>

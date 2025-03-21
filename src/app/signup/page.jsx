@@ -235,22 +235,22 @@ export default function Signup() {
         </div>
 
         <button
-          className="w-full py-3 flex justify-center items-center gap-x-2 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 focus:ring focus:ring-yellow-600 transition duration-300"
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 focus:ring focus:ring-yellow-600 transition duration-300"
           onClick={handleGoogle}
         >
-          <FaGoogle /> SIGNUP WITH GOOGLE
+          <FaGoogle className="text-xl" /> SIGNUP WITH GOOGLE
         </button>
         <button
           className="w-full py-3 flex justify-center items-center gap-x-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
           onClick={handleGithub}
         >
-          <FaGithub /> SIGNUP WITH GITHUB
+          <FaGithub className="text-xl" /> SIGNUP WITH GITHUB
         </button>
         <button
           className="w-full py-3 flex justify-center items-center gap-x-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
           onClick={handleFacebook}
         >
-          <FaFacebook /> <p>SIGNUP WITH FACEBOOK</p>
+          <FaFacebook className="text-xl" /> <p>SIGNUP WITH FACEBOOK</p>
         </button>
 
         <p className="mt-4 text-center text-sm text-black">
@@ -259,7 +259,7 @@ export default function Signup() {
             href="/login"
             className="text-black font-medium hover:underline"
           >
-            LOGIN
+            Login
           </Link>
         </p>
       </div>
