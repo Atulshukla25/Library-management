@@ -10,6 +10,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const userId = Cookies.get("userId");
+    console.log(userId);
 
     fetch(`/api/students/${userId}`)
       .then((res) => res.json())
@@ -22,7 +23,7 @@ export default function Dashboard() {
       <Navbar user={user} />
       <div className="container mx-auto mt-8 px-6">
         <h1 className="text-4xl font-extrabold text-white mb-6 text-center">
-          📚 Welcome to Dashboard
+          📚 Welcome to Dashboard {user?.id}
         </h1>
         <h1 className="text-2xl font-extrabold text-white mb-6 text-center">
           {user?.full_name}

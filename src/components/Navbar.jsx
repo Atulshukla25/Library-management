@@ -12,10 +12,23 @@ export default function Navbar({ user }) {
     setIsPopupOpen(!isPopupOpen);
   };
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("userId");
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (res.ok) {
+        Cookies.remove("token");
+        Cookies.remove("userId"); 
+        router.push("/login");
+      } else {
+        console.error("Logout failed:", await res.json());
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return (

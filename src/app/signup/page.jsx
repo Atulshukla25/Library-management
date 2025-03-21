@@ -8,13 +8,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
+import { FaFacebook } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import { signupSchema } from "@/schema/validation";
-function handleGoogle() {
-  alert("You clicked Signup with google");
-}
-function handleGithub() {
-  alert("You clicked Signup with github");
-}
 
 export default function Signup() {
   const router = useRouter();
@@ -26,6 +23,28 @@ export default function Signup() {
   } = useForm({ resolver: zodResolver(signupSchema) });
 
   const [serverError, setServerError] = useState("");
+  const handleGoogle = async () => {
+    try {
+      window.location.href = "/api/auth/google";
+    } catch (error) {
+      console.error("Google login failed", error);
+    }
+  };
+  const handleGithub = async () => {
+    try {
+      window.location.href = "http://localhost:3000/api/auth/github";
+    } catch (error) {
+      console.error("GitHub login failed", error);
+    }
+  };
+
+  const handleFacebook = async () => {
+    try {
+      window.location.href = "http://localhost:3000/api/auth/facebook";
+    } catch (error) {
+      console.error("GitHub login failed", error);
+    }
+  };
 
   useEffect(() => {
     flatpickr("#dob", {
@@ -205,22 +224,33 @@ export default function Signup() {
             type="submit"
             className="w-full py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 transition duration-300"
           >
-            Sign Up
+            SIGNUP
           </button>
         </form>
 
-        <p className="flex justify-center text-black text-mg font-bold">Or</p>
+        <div className="flex justify-center items-center">
+          <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
+          <p className="px-5 text-black font-bold">Or</p>
+          <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
+        </div>
+
         <button
-          className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 focus:ring focus:ring-yellow-600 transition duration-300"
           onClick={handleGoogle}
         >
-          Signup with Google
+          <FaGoogle /> SIGNUP WITH GOOGLE
         </button>
         <button
-          className="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
           onClick={handleGithub}
         >
-          Signup with GitHub
+          <FaGithub /> SIGNUP WITH GITHUB
+        </button>
+        <button
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          onClick={handleFacebook}
+        >
+          <FaFacebook /> <p>SIGNUP WITH FACEBOOK</p>
         </button>
 
         <p className="mt-4 text-center text-sm text-black">
@@ -229,7 +259,7 @@ export default function Signup() {
             href="/login"
             className="text-black font-medium hover:underline"
           >
-            Login
+            LOGIN
           </Link>
         </p>
       </div>

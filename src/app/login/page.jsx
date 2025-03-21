@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { FaFacebook } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import Cookies from "js-cookie";
 
 const loginSchema = z.object({
@@ -13,12 +16,27 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password field is required"),
 });
 
-function handleGoogle() {
-  alert("You clicked continue with google");
-}
-function handleGithub() {
-  alert("You clicked continue with github");
-}
+const handleGoogle = async () => {
+  try {
+    window.location.href = "/api/auth/google";
+  } catch (error) {
+    console.error("Google login failed", error);
+  }
+};
+const handleGithub = async () => {
+  try {
+    window.location.href = "http://localhost:3000/api/auth/github";
+  } catch (error) {
+    console.error("GitHub login failed", error);
+  }
+};
+const handleFacebook = async () => {
+  try {
+    window.location.href = "http://localhost:3000/api/auth/facebook";
+  } catch (error) {
+    console.error("GitHub login failed", error);
+  }
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -102,21 +120,31 @@ export default function LoginPage() {
             type="submit"
             className="w-full py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 focus:ring focus:ring-blue-400 transition duration-300"
           >
-            Login
+            LOGIN
           </button>
         </form>
-        <p className="flex justify-center text-black text-mg font-bold">Or</p>
+        <div className="flex justify-center items-center">
+          <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
+          <p className="px-5 text-black font-bold">Or</p>
+          <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
+        </div>
         <button
-          className="w-full py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-800 focus:ring focus:ring-yellow-600 transition duration-300"
           onClick={handleGoogle}
         >
-          Continue with Google
+          <FaGoogle /> CONTINUE WITH GOOGLE
         </button>
         <button
-          className="w-full py-3 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
           onClick={handleGithub}
         >
-          Continue with GitHub
+          <FaGithub /> CONTINUE WITH GITHUB
+        </button>
+        <button
+          className="w-full py-3 flex justify-center items-center gap-x-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
+          onClick={handleFacebook}
+        >
+          <FaFacebook /> CONTINUE WITH FACEBOOK
         </button>
 
         <p className="mt-4 text-center text-sm text-black">
@@ -125,7 +153,7 @@ export default function LoginPage() {
             href="/signup"
             className="text-black font-medium hover:underline"
           >
-            Create now
+            CREATE NOW
           </Link>
         </p>
       </div>
