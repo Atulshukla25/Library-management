@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
+import axios from "axios";
 
 dotenv.config();
 
@@ -28,37 +29,37 @@ export async function GET(req) {
   }
 
   try {
-    const tokenRes = await fetch(
+    const tokenRes = await axios.post(
       "https://github.com/login/oauth/access_token",
       {
-        method: "POST",
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        code,
+      },
+      {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          client_id: CLIENT_ID,
-          client_secret: CLIENT_SECRET,
-          code,
-        }),
       }
     );
 
-    const { access_token } = await tokenRes.json();
+    const { access_token } = tokenRes.data;
     if (!access_token) throw new Error("GitHub OAuth Failed");
 
-    const userRes = await fetch("https://api.github.com/user", {
+    const userRes = await axios.get("https://api.github.com/user", {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
-    const userData = await userRes.json();
+    const userData = userRes.data;
 
     let email = userData.email;
     if (!email) {
-      const emailRes = await fetch("https://api.github.com/user/emails", {
+      const emailRes = await axios.get("https://api.github.com/user/emails", {
         headers: { Authorization: `Bearer ${access_token}` },
       });
-      const emails = await emailRes.json();
+
+      const emails = emailRes.data;
       email = emails.find((e) => e.primary)?.email || null;
     }
 

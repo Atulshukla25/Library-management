@@ -3,24 +3,18 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Cookies from "js-cookie";
+import axios from "axios";
+import useAuthStore from "@/store";
 
 export default function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [books, setBooks] = useState([]);
   const router = useRouter();
+  const { user, books, fetchStudents, fetchBooks } = useAuthStore();
 
   useEffect(() => {
     const userId = Cookies.get("userId");
 
-    fetch(`/api/students/${userId}`)
-      .then((res) => res.json())
-      .then((data) => setUser(data))
-      .catch((err) => console.error("Error fetching user:", err));
-
-    fetch("/api/books")
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-      .catch((err) => console.error("Error fetching books:", err));
+    fetchStudents(userId);
+    fetchBooks();
   }, [router]);
 
   return (

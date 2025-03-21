@@ -8,10 +8,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
-import { FaFacebook } from "react-icons/fa";
-import { FaGithub } from "react-icons/fa";
-import { FaGoogle } from "react-icons/fa";
+import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 import { signupSchema } from "@/schema/validation";
+import useAuthStore from "@/store";
 
 export default function Signup() {
   const router = useRouter();
@@ -21,42 +20,24 @@ export default function Signup() {
     formState: { errors },
     setValue,
   } = useForm({ resolver: zodResolver(signupSchema) });
+  const { departments, fetchDepartments, handleOAuth, signupWithCredential } =
+    useAuthStore();
 
   const [serverError, setServerError] = useState("");
-  const handleGoogle = async () => {
-    try {
-      window.location.href = "/api/auth/google";
-    } catch (error) {
-      console.error("Google login failed", error);
-    }
-  };
-  const handleGithub = async () => {
-    try {
-      window.location.href = "http://localhost:3000/api/auth/github";
-    } catch (error) {
-      console.error("GitHub login failed", error);
-    }
-  };
-
-  const handleFacebook = async () => {
-    try {
-      window.location.href = "http://localhost:3000/api/auth/facebook";
-    } catch (error) {
-      console.error("GitHub login failed", error);
-    }
-  };
 
   useEffect(() => {
     flatpickr("#dob", {
       dateFormat: "Y-m-d",
       maxDate: "today",
-      onChange: function (selectedDates, dateStr, instance) {
+      onChange: (selectedDates, dateStr) => {
         setValue("dob", dateStr, { shouldValidate: true });
       },
     });
   }, [setValue]);
 
-  const [departments, setDepartments] = useState([]);
+  useEffect(() => {
+    fetchDepartments();
+  }, []);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -67,27 +48,8 @@ export default function Signup() {
     formData.append("department", data.department);
     formData.append("gender", data.gender);
     formData.append("profile_picture", data.profile_picture[0]);
-
-    try {
-      await axios.post("/api/auth/signup", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      router.push("/dashboard");
-      alert("Signup successful! Redirecting...");
-    } catch (error) {
-      setServerError("Failed to sign up. Please try again.");
-    }
+    signupWithCredential(formData, router);
   };
-
-  const fetchDepartment = async () => {
-    const fetchData = await axios.get("/api/departments");
-    setDepartments(fetchData.data);
-    console.log(fetchData.data);
-  };
-
-  useEffect(() => {
-    fetchDepartment();
-  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-white">
@@ -142,7 +104,7 @@ export default function Signup() {
                   id={name === "dob" ? "dob" : undefined}
                   {...register(name)}
                   placeholder={placeholder}
-                  className="w-full mt-1 p-1 px-4 py-2 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
+                  className="w-full mt-1 p-1 px-4 py-2 border border-black rounded-lg focus:ring focus:ring-black focus:outline-none bg-white"
                 />
                 {errors[name] && (
                   <p className="text-red-500 text-sm mt-1">
@@ -160,7 +122,7 @@ export default function Signup() {
               </label>
               <select
                 {...register("department")}
-                className="w-full mt-1 px-4 py-2 p-1 border border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
+                className="w-full mt-1 px-4 py-2 p-1 border border-black rounded-lg focus:ring focus:ring-black focus:outline-none bg-white"
               >
                 <option value="">Select Department</option>
                 {departments.map((dept) => (
@@ -211,7 +173,7 @@ export default function Signup() {
             <input
               type="file"
               {...register("profile_picture")}
-              className="w-full mt-1 p-1 border px-4 py-2 border-black rounded-lg focus:ring focus:ring-red-400 focus:outline-none bg-white"
+              className="w-full mt-1 p-1 border px-4 py-2 border-black rounded-lg focus:ring focus:ring-black focus:outline-none bg-white"
             />
             {errors.profile_picture && (
               <p className="text-red-500 text-sm mt-1">
@@ -222,38 +184,13 @@ export default function Signup() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 focus:ring focus:ring-red-400 transition duration-300"
+            className="w-full py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:ring focus:ring-black transition duration-300"
           >
             SIGNUP
           </button>
         </form>
 
-        <div className="flex justify-center items-center">
-          <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
-          <p className="px-5 text-black font-bold">Or</p>
-          <hr className="w-[40%] h-[1px] bg-[#a5a0a0] border-0" />
-        </div>
-
-        <button
-          className="w-full py-3 flex justify-center items-center gap-x-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 focus:ring focus:ring-yellow-600 transition duration-300"
-          onClick={handleGoogle}
-        >
-          <FaGoogle className="text-xl" /> SIGNUP WITH GOOGLE
-        </button>
-        <button
-          className="w-full py-3 flex justify-center items-center gap-x-2 bg-gray-900 text-white font-medium rounded-lg hover:bg-gray-800 focus:ring focus:ring-gray-600 transition duration-300"
-          onClick={handleGithub}
-        >
-          <FaGithub className="text-xl" /> SIGNUP WITH GITHUB
-        </button>
-        <button
-          className="w-full py-3 flex justify-center items-center gap-x-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring focus:ring-blue-400 transition duration-300"
-          onClick={handleFacebook}
-        >
-          <FaFacebook className="text-xl" /> <p>SIGNUP WITH FACEBOOK</p>
-        </button>
-
-        <p className="mt-4 text-center text-sm text-black">
+        <p className="mt-4 text-center text-md text-black">
           Already have an account?{" "}
           <Link
             href="/login"
@@ -262,6 +199,38 @@ export default function Signup() {
             Login
           </Link>
         </p>
+
+        <div className="flex justify-center items-center">
+          <hr className="w-[50%] h-[1px] bg-[#a5a0a0] border-0" />
+          <p className="px-5 text-black font-bold">Or</p>
+          <hr className="w-[50%] h-[1px] bg-[#a5a0a0] border-0" />
+        </div>
+
+        {[
+          {
+            provider: "google",
+            color: "bg-red-500 hover:bg-red-600",
+            icon: <FaGoogle className="text-xl" />,
+          },
+          {
+            provider: "github",
+            color: "bg-gray-900 hover:bg-gray-700",
+            icon: <FaGithub className="text-xl" />,
+          },
+          {
+            provider: "facebook",
+            color: "bg-blue-600 hover:bg-blue-800",
+            icon: <FaFacebook className="text-xl" />,
+          },
+        ].map(({ provider, color, icon }) => (
+          <button
+            key={provider}
+            className={`w-full py-3 flex justify-center items-center gap-x-2 ${color} text-white font-medium rounded-lg focus:ring transition duration-300`}
+            onClick={() => handleOAuth(provider)}
+          >
+            {icon} SIGNUP WITH {provider.toUpperCase()}
+          </button>
+        ))}
       </div>
     </div>
   );

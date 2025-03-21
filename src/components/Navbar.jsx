@@ -3,32 +3,16 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import axios from "axios";
+import useAuthStore from "@/store";
 
 export default function Navbar({ user }) {
   const router = useRouter();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const { logout } = useAuthStore();
 
   const togglePopup = () => {
     setIsPopupOpen(!isPopupOpen);
-  };
-
-  const handleLogout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        Cookies.remove("token");
-        Cookies.remove("userId"); 
-        router.push("/login");
-      } else {
-        console.error("Logout failed:", await res.json());
-      }
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
   };
 
   return (
@@ -67,7 +51,9 @@ export default function Navbar({ user }) {
                   <strong>Gender:</strong> {user.gender}
                 </p>
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    logout(router);
+                  }}
                   className="mt-4 w-full bg-red-500 text-white px-3 py-1 rounded"
                 >
                   Logout
