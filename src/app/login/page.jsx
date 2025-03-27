@@ -7,8 +7,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
-import Cookies from "js-cookie";
-import axios from "axios";
 import useAuthStore from "@/store";
 
 const loginSchema = z.object({

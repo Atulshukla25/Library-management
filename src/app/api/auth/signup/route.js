@@ -5,7 +5,7 @@ import path from "path";
 
 export async function POST(req) {
   try {
-    const formData = await req.formData(); 
+    const formData = await req.formData();
 
     const full_name = formData.get("full_name");
     const email = formData.get("email");
@@ -14,6 +14,18 @@ export async function POST(req) {
     const department = formData.get("department");
     const gender = formData.get("gender");
     const profile_picture = formData.get("profile_picture");
+    const db = await connectDB();
+
+    const [existingUser] = await db.query(
+      "SELECT * FROM students WHERE email = ?",
+      [email]
+    );
+
+    if (existingUser.length > 0) {
+      return new Response(JSON.stringify({ error: "Email already exists" }), {
+        status: 409,
+      });
+    }
 
     let filePath = "";
     if (profile_picture) {
@@ -27,15 +39,16 @@ export async function POST(req) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const db = await connectDB();
     const [result] = await db.execute(
       "INSERT INTO students (full_name, email, password, dob, department, gender, profile_picture) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [full_name, email, hashedPassword, dob, department, gender, filePath]
     );
     db.end();
 
-    return Response.json({ message: "User registered successfully", id: result.insertId });
+    return Response.json({
+      message: "User registered successfully",
+      id: result.insertId,
+    });
   } catch (error) {
     console.error("Error:", error);
     return Response.json({ error: "Database error" }, { status: 500 });

@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/themes/light.css";
@@ -90,7 +89,7 @@ export default function Signup() {
               },
               {
                 label: "Date of Birth",
-                type: "date",
+                // type: "date",
                 name: "dob",
                 placeholder: "Select your date of birth",
               },
@@ -219,7 +218,7 @@ export default function Signup() {
           },
           {
             provider: "facebook",
-            color: "bg-blue-600 hover:bg-blue-800",
+            color: "bg-blue-800 hover:bg-blue-900",
             icon: <FaFacebook className="text-xl" />,
           },
         ].map(({ provider, color, icon }) => (

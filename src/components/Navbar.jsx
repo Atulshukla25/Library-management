@@ -2,8 +2,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import axios from "axios";
 import useAuthStore from "@/store";
 
 export default function Navbar({ user }) {

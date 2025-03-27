@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Cookies from "js-cookie";
-import axios from "axios";
 import useAuthStore from "@/store";
 
 export default function Dashboard() {
